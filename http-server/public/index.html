@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Dashboard</title>
+  </head>
+
+
+  <body class="dashboard">
+
+
+    <div class="sidebar">
+      <h3>BUSES</h3>
+      <ul id="buses"></ul>
+    </div>
+
+    <div class="mainview">
+
+      <div id="messages">
+        <div class="title-bar">
+          <h3>Incoming Messages</h3>
+        </div>
+        <div id="messages-board">
+          <p>Current Speed: <span id="current-speed"></span></p>
+          <p>State of Charge: <span id="state-charge"></span></p>
+          <p>Energy: <span id="energy"></span></p>
+          <p>Odometer: <span id="odometer"></span></p>
+          <p>Position: <span id="position"></span></p>
+        </div>
+      </div>
+
+      <div id="incidents">
+        <div class="title-bar">
+          <h3>Incidents Reports <span id="n-incidents">0</span></h3>
+        </div>
+        <div id="incidents-board">
+          <ul id="incident-list">
+            <li class="incident">No incidents</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+    <script id="message-template" type="text/template">
+      <li class="message">
+        <div class="message__title">
+          <h4>{{from}}</h4>
+          <span>{{createdAt}}</span>
+        </div>
+        <div class="message__body">
+          <p>{{text}}</p>
+        </div>
+      </li>
+    </script>
+
+    <script id="location-message-template" type="text/template">
+      <li class="message">
+        <div class="message__title">
+          <h4>{{from}}</h4>
+          <span>{{createdAt}}</span>
+        </div>
+        <div class="message__body">
+          <p>
+            <a href="{{url}}" target="_blank">My current location</a>
+          </p>
+        </div>
+      </li>
+    </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script> -->
+    <!-- <script src="/js/libs/moment.js"></script>
+    <script src="/js/libs/mustache.js"></script> -->
+    <script src="/js/client.js"></script>
+    <script src="https://unpkg.com/moment"></script>
+  </body>
+</html>

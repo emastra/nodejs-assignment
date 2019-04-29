@@ -1,0 +1,8 @@
+require('../../config/config.js');
+
+describe('config', () => {
+  it('should set environment variables', () => {
+    expect(process.env.PORT).toBe('3000');
+    expect(process.env.MONGODB_URI).toBe('mongodb://localhost:27017/VehicleDB_tests');
+  });
+});

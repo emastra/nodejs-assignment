@@ -23,6 +23,8 @@ const NATS = require("nats")
 // After a connection is made you can start broadcasting messages (take a look at nats.publish())
 const nats = NATS.connect({json: true})
 
+const routeArr = [] // const
+
 // This function will start reading out csv data from file and publish it on nats
 const readOutLoud = (vehicleName) => {
 	// Read out meta/route.csv and turn it into readable stream
@@ -49,6 +51,7 @@ const readOutLoud = (vehicleName) => {
 		// Then it is piped to a writable streams that will push it into nats
 		.pipe(new Writable({
 			objectMode: true,
+			// NEW WRITABLE CREATES A WR OBJ. WRITE METHOD HERE RUNS EVERYTIME IT WRITE. UNDERTHEHOOD SETS _write internal method. cb dovrebbe esse chiamato next.
 			write(obj, enc, cb) {
 				// setTimeout in this case is there to emulate real life situation
 				// data that came out of the vehicle came in with irregular interval
@@ -62,7 +65,10 @@ const readOutLoud = (vehicleName) => {
 					// The first parameter on this function is topics in which data will be broadcasted
 					// it also includes the vehicle name to seggregate data between different vehicle
 
+					// STO CB SAREBBE IL NEXT CHE VIENE PASSATO A WRITE QUI SOPRA. E POI PUBLISH CHIAMA NEXT QUANDO HA FINITO IL PUBLISH. QUINDI IL WRITE CONTINUA CON L'OGGETTO SEGUENTE
 					nats.publish(`vehicle.${vehicleName}`, obj, cb)
+
+					routeArr.push(obj)
 
 				}, Math.ceil(Math.random() * 150))
 			}
@@ -79,5 +85,32 @@ console.log("Henk checks in on test-bus-1 starting his shift...")
 readOutLoud("test-bus-1")
 	.once("finish", () => {
 		console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
+		setTimeout(() => {
+			console.log("Henk starts his return trip on test-bus-1...")
+			driveReverse("test-bus-1", routeArr, () => {
+				console.log("Henk finished the round trip.")
+			})
+		}, 10000)
 	})
+
 // To make your presentation interesting maybe you can make henk drive again in reverse
+function driveReverse(vehicleName, routeArr, callback) {
+	const routeArrRev = routeArr.slice().reverse();
+	// let counter = 1;
+	let i = 0;
+	const maxLoops = routeArrRev.length - 1;
+
+	// https://patrickmuff.ch/blog/2014/03/12/for-loop-with-delay-in-javascript/
+	// because a for-loop is synchronous while setTimout is asynchronous
+	(function next() {
+		// stop condition // i+1
+    if (i++ > maxLoops) return callback();
+
+    setTimeout(() => {
+			// i++;
+      if((i % 100) === 0) console.log(`vehicle ${vehicleName} sent have sent ${i} messages`);
+			nats.publish(`vehicle.${vehicleName}`, routeArrRev[i]);
+      next();
+    }, 150);
+	})();
+}

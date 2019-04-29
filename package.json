@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start-nats": "sh ./start-nats",
+    "start-servers": "node data-storage/index.js & node incident-reporting/index.js & node http-server/index.js",
     "start-broadcast": "node vehicle-data-generator/index.js"
   },
   "author": "",

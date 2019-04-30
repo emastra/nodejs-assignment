@@ -1,9 +1,3 @@
-Start all servers
-
-`npm run start-nats`
-
-
-
 # ViriCiti Nodejs Assignment
 ![
 ](https://imgs.xkcd.com/comics/code_quality_3.png)

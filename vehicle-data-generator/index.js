@@ -87,6 +87,7 @@ readOutLoud("test-bus-1")
 		console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
 		setTimeout(() => {
 			console.log("Henk starts his return trip on test-bus-1...")
+			// start reverse route
 			driveReverse("test-bus-1", routeArr, () => {
 				console.log("Henk finished the round trip.")
 			})
@@ -96,18 +97,14 @@ readOutLoud("test-bus-1")
 // To make your presentation interesting maybe you can make henk drive again in reverse
 function driveReverse(vehicleName, routeArr, callback) {
 	const routeArrRev = routeArr.slice().reverse();
-	// let counter = 1;
+
 	let i = 0;
 	const maxLoops = routeArrRev.length - 1;
 
-	// https://patrickmuff.ch/blog/2014/03/12/for-loop-with-delay-in-javascript/
-	// because a for-loop is synchronous while setTimout is asynchronous
 	(function next() {
-		// stop condition // i+1
     if (i++ > maxLoops) return callback();
 
     setTimeout(() => {
-			// i++;
       if((i % 100) === 0) console.log(`vehicle ${vehicleName} sent have sent ${i} messages`);
 			nats.publish(`vehicle.${vehicleName}`, routeArrRev[i]);
       next();

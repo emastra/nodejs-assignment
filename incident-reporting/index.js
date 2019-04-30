@@ -28,6 +28,7 @@ nc.on('connect', (c) => {
 
 nc.subscribe('vehicle.*', async function(msg, reply, subject) {
   if (!msg) return;
+
   const { error } = checkIncidents(msg);
   if (!error) return;
 
@@ -47,9 +48,14 @@ nc.subscribe('vehicle.*', async function(msg, reply, subject) {
     }
   });
 
-  let doc = await incident.save();
+  try {
+    let doc = await incident.save();
 
-  io.emit('newIncident', doc);
+    io.emit('newIncident', doc);
+  } catch(err) {
+    console.log(err);
+  }
+
 });
 
 nc.on('error', (err) => {

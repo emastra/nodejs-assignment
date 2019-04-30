@@ -10,6 +10,7 @@ module.exports = (io) => {
 
   nc.subscribe('vehicle.*', async function(msg, reply, subject) {
     if (!msg) return;
+    
     const { error } = validate(msg);
     if (error) return console.log('nc validate:', error.details[0].message, msg);
 
